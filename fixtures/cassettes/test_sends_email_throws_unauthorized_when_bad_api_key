@@ -1,0 +1,170 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.22.0
+    method: GET
+    uri: https://lb.511ia.org/ialb/cameras/camera.jsf;jsessionid=CDRUfIHRjFD3g-KsTsIcu5xggMRZMM7pZrCqWiUt.ip-10-4-73-18?id=59169258&view=state&text=m&textOnly=false
+  response:
+    body:
+      string: !!binary |
+        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
+    headers:
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Headers:
+      - Content-Type
+      Access-Control-Allow-Methods:
+      - GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS
+      Access-Control-Allow-Origin:
+      - '*'
+      Cache-Control:
+      - no-cache
+      Connection:
+      - keep-alive
+      Content-Encoding:
+      - gzip
+      Content-Length:
+      - '3347'
+      Content-Type:
+      - text/html;charset=UTF-8
+      Date:
+      - Sat, 01 Feb 2020 03:54:46 GMT
+      Expires:
+      - '0'
+      Pragma:
+      - no-cache
+      Server:
+      - nginx/1.16.1
+      Set-Cookie:
+      - AWSALB=1U+/NzKPdGnZUf6aswSOU6OZQeQ/yqBB9r1+MJ7tBinzwqcoMdOvPqd7HF7Z5zZnD6/rSIeM208kV2rLLo4qt4PNHwYMHTMfmITCx0wWx59yLor0bJINl48tsiaw;
+        Expires=Sat, 08 Feb 2020 03:54:46 GMT; Path=/
+      - AWSALBCORS=1U+/NzKPdGnZUf6aswSOU6OZQeQ/yqBB9r1+MJ7tBinzwqcoMdOvPqd7HF7Z5zZnD6/rSIeM208kV2rLLo4qt4PNHwYMHTMfmITCx0wWx59yLor0bJINl48tsiaw;
+        Expires=Sat, 08 Feb 2020 03:54:46 GMT; Path=/; SameSite=None; Secure
+      - JSESSIONID=-u5dC7_uddFi5j1Bjk3s1tq5ck6ovDbkwUFecxXm.ip-10-4-73-18; path=/ialb
+      Vary:
+      - Accept-Encoding
+      X-Powered-By:
+      - Undertow/1
+      X-Server:
+      - ip-10-4-73-18
+      X-Upstream:
+      - 127.0.0.1:9080
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"from": {"email": "keep_me_safe@me_so_safe.com"}, "subject": "Traffic
+      Conditions Today", "personalizations": [{"to": [{"email": "test@example.com"}]}],
+      "content": [{"type": "text/html", "value": "<img src=http://205.221.66.10/axis/DMTV69.jpg>"}]}'
+    headers:
+      Accept:
+      - application/json
+      Authorization:
+      - Bearer test_api_key
+      Connection:
+      - close
+      Content-Length:
+      - '247'
+      Content-Type:
+      - application/json
+      Host:
+      - api.sendgrid.com
+      User-Agent:
+      - sendgrid/6.1.1;python
+    method: POST
+    uri: https://api.sendgrid.com/v3/mail/send
+  response:
+    body:
+      string: '{"errors":[{"message":"The provided authorization grant is invalid,
+        expired, or revoked","field":null,"help":null}]}'
+    headers:
+      Access-Control-Allow-Headers:
+      - Authorization, Content-Type, On-behalf-of, x-sg-elas-acl
+      Access-Control-Allow-Methods:
+      - POST
+      Access-Control-Allow-Origin:
+      - https://sendgrid.api-docs.io
+      Access-Control-Max-Age:
+      - '600'
+      Connection:
+      - close
+      Content-Length:
+      - '116'
+      Content-Type:
+      - application/json
+      Date:
+      - Sat, 01 Feb 2020 03:54:46 GMT
+      Server:
+      - nginx
+      X-No-CORS-Reason:
+      - https://sendgrid.com/docs/Classroom/Basics/API/cors.html
+    status:
+      code: 401
+      message: Unauthorized
+version: 1
