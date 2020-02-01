@@ -29,5 +29,5 @@ jobs:
         echo "TODO"
     - name: Test with unittest
       run: |
-        pip install vcrpy
-        python -m unittest
+        pip install vcrpy nose
+        nosetests
