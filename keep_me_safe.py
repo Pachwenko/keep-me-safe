@@ -23,7 +23,7 @@ def get_env_variable(parameter_name: str) -> str:
 
 def do_the_thing() -> None:
     traffic_page = requests.get(
-        'https://lb.511ia.org/ialb/cameras/camera.jsf;jsessionid=CDRUfIHRjFD3g-KsTsIcu5xggMRZMM7pZrCqWiUt.ip-10-4-73-18?id=59169258&view=state&text=m&textOnly=false'
+        'https://lb.511ia.org/ialb/cameras/camera.jsf;jsessionid=CDRUfIHRjFD3g-KsTsIcu5xggMRZMM7pZrCqWiUt.ip-10-4-73-18?id=59169258&view=state&text=m&textOnly=false'  # noqa: E501
     )
     soup = BeautifulSoup(traffic_page.content)
     img_url = soup.find(id='cam-0-img')['src']
