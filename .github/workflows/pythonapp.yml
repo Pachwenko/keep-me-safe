@@ -26,8 +26,9 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Type Check with MyPy
       run: |
-        echo "TODO"
+        pip install mypy
+        mypy keep_me_safe.py --ignore-missing-imports
     - name: Test with unittest
       run: |
-        pip install vcrpy
-        python -m unittest
+        pip install vcrpy nose
+        nosetests --processes=2
