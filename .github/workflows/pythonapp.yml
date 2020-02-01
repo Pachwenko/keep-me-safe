@@ -27,6 +27,7 @@ jobs:
     - name: Type Check with MyPy
       run: |
         echo "TODO"
-    - name: Test with pytest
+    - name: Test with unittest
       run: |
+        pip install vcrpy
         python -m unittest
