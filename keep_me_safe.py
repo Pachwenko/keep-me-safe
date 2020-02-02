@@ -66,6 +66,7 @@ def send_email(html_content='') -> Response:
 
 
 def do_the_thing() -> Response:
+    """Entrypoint for the app"""
     img_urls = get_image_urls(get_pages())
     html_content = build_html_content(img_urls)
     return send_email(html_content)
