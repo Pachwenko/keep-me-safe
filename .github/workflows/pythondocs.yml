@@ -1,18 +1,21 @@
 name: Generate Documentation
 
-on: pull_request
+on:
+  push:
+    branches:
+      - master
 
 jobs:
   generate_docs:
     runs-on: ubuntu-latest
     steps:
       - name: Auto Generate docs with pdoc3
-        if: github.event.action == 'merged' && github.event.branch == 'master'
+
         run: |
             pip install pdoc3
             pdoc --html --output-dir documentation keep_me_safe --force
       - name: Commit documentation
-        if: github.event.action == 'merged' && github.event.branch == 'master'
+
         run: |
           git config --global user.name 'Pachwenko'
           git config --global user.email '32424503+Pachwenko@users.noreply.github.com'
