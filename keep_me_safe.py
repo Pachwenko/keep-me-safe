@@ -1,4 +1,5 @@
 from bs4 import BeautifulSoup
+import json
 import os
 import requests
 
@@ -12,6 +13,15 @@ class ParameterNotFound(Exception):
     pass
 
 
+def get_pages() -> list:
+    result = []
+    with open('511_pages.json', 'r') as f:
+        result = json.loads(f.read())
+        if not isinstance(result, list):
+            return []
+    return result
+
+
 def get_env_variable(parameter_name: str) -> str:
     if not parameter_name or not isinstance(parameter_name, str):
         return ''
@@ -19,6 +29,16 @@ def get_env_variable(parameter_name: str) -> str:
     if not result:
         raise ParameterNotFound(parameter_name)
     return result
+
+
+def get_image_urls(pages: tuple, img_id='cam-0-img') -> tuple:
+    result = []
+    for page in get_pages():
+        traffic_page = requests.get(page)
+        soup = BeautifulSoup(traffic_page.content)
+        print(soup.find_all('img'))
+        result.append(soup.find(id=img_id)['src'])
+    return tuple(result)
 
 
 def do_the_thing() -> None:
