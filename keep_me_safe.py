@@ -49,6 +49,10 @@ def build_html_content(img_urls: dict) -> str:
 
 
 def send_email(html_content='') -> Response:
+    """
+    Requires 2 environment variables to be set:
+        KEEP_ME_SAFE_EMAIL and SENDGRID_API_KEY
+    """
     message = Mail(
         from_email='keep_me_safe@me_so_safe.com',
         to_emails=get_env_variable('KEEP_ME_SAFE_EMAIL'),
