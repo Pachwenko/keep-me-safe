@@ -1,12 +1,14 @@
-import json
+from bs4 import BeautifulSoup
 import os
 from python_http_client import UnauthorizedError
 import unittest
 
 from keep_me_safe import (
-    do_the_thing,
+    # do_the_thing,
     get_image_urls,
     get_env_variable,
+    build_html_content,
+    send_email,
     ParameterNotFound
 )
 import vcr
@@ -19,10 +21,10 @@ my_vcr = vcr.VCR(
 )
 
 
-class TestKeepMeSafe(unittest.TestCase):
+class KeepMeSafeUnitTests(unittest.TestCase):
 
     def setUp(self):
-        pass
+        self.expected_src_url = '/logos/doodles/2020/60th-anniversary-of-the-greensboro-sit-in-6753651837108277.3-l.png'  # noqa: E501
 
     def tearDown(self):
         try:
@@ -49,34 +51,54 @@ class TestKeepMeSafe(unittest.TestCase):
 
     @my_vcr.use_cassette
     def test_get_pages_reads_from_511_pages_json_file(self):
-        expected_url = (
-            '/logos/doodles/2020/60th-anniversary-of-the-greensboro-sit-in-6753651837108277.3-l.png',
-        )
+        expected_src_url = {
+            'https://google.com': self.expected_src_url,
+        }
         pages = ['https://google.com']
-        with open('511_pages.json', 'w+') as f:
-            f.write(json.dumps(pages))
         img_id = 'hplogo'
 
         actual_url = get_image_urls(pages, img_id)
 
-        self.assertEqual(expected_url, actual_url)
+        self.assertEqual(expected_src_url, actual_url)
 
     @my_vcr.use_cassette
     def test_get_image_urls_returns_multiple_src_urls(self):
-        expected_url = (
-            '/logos/doodles/2020/60th-anniversary-of-the-greensboro-sit-in-6753651837108277.3-l.png',
-            '/logos/doodles/2020/60th-anniversary-of-the-greensboro-sit-in-6753651837108277.3-l.png',
-        )
+        expected_src_urls = {
+            'https://google.com': self.expected_src_url
+        }
         pages = ['https://google.com', 'https://google.com']
-        with open('511_pages.json', 'w+') as f:
-            f.write(json.dumps(pages))
         img_id = 'hplogo'
+
         actual_url = get_image_urls(pages, img_id)
-        self.assertEqual(expected_url, actual_url)
+
+        self.assertEqual(expected_src_urls, actual_url)
+
+    def test_build_html_content_returns_right_data(self):
+        expected_src_url = self.expected_src_url
+        expected_page = 'https://google.com'
+        img_urls = {expected_page: expected_src_url}
+
+        actual_html = build_html_content(img_urls)
+
+        soup = BeautifulSoup(actual_html)
+        self.assertEqual(expected_src_url, soup.find('img')['src'])
+        self.assertEqual(expected_page, soup.find('img').parent['href'])
 
     @my_vcr.use_cassette
     def test_sends_email_throws_unauthorized_error_when_bad_api_key(self):
-        os.environ['DESTINATION_EMAIL'] = 'test@example.com'
+        os.environ['KEEP_ME_SAFE_EMAIL'] = 'test@example.com'
         os.environ['SENDGRID_API_KEY'] = 'test_api_key'
+
         with self.assertRaises(UnauthorizedError):
-            do_the_thing()
+            send_email()
+
+
+# class KeepMeSafeIntegrationTests(unittest.TestCase):
+
+#     @vcr.use_cassette
+#     def test_do_the_thing_works(self):
+#         expected_status_code = 202
+
+#         actual_response = do_the_thing()
+
+#         self.assertEqual(expected_status_code, actual_response.status_code)

@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 import json
 import os
+from python_http_client.client import Response
 import requests
 
 # using SendGrid's Python Library
@@ -31,36 +32,43 @@ def get_env_variable(parameter_name: str) -> str:
     return result
 
 
-def get_image_urls(pages: tuple, img_id='cam-0-img') -> tuple:
-    result = []
-    for page in get_pages():
+def get_image_urls(pages: list, img_id='cam-0-img') -> dict:
+    result = {}
+    for page in pages:
         traffic_page = requests.get(page)
         soup = BeautifulSoup(traffic_page.content)
-        print(soup.find_all('img'))
-        result.append(soup.find(id=img_id)['src'])
-    return tuple(result)
+        result[page] = (soup.find(id=img_id)['src'])
+    return result
 
 
-def do_the_thing() -> None:
-    traffic_page = requests.get(
-        'https://lb.511ia.org/ialb/cameras/camera.jsf;jsessionid=CDRUfIHRjFD3g-KsTsIcu5xggMRZMM7pZrCqWiUt.ip-10-4-73-18?id=59169258&view=state&text=m&textOnly=false'  # noqa: E501
-    )
-    soup = BeautifulSoup(traffic_page.content)
-    img_url = soup.find(id='cam-0-img')['src']
+def build_html_content(img_urls: dict) -> str:
+    result = ''
+    for key, value in img_urls.items():
+        result += '<a href={}><img src={}></a><br/>'.format(key, value)
+    return result
 
+
+def send_email(html_content='') -> Response:
     message = Mail(
         from_email='keep_me_safe@me_so_safe.com',
-        to_emails=get_env_variable('DESTINATION_EMAIL'),
+        to_emails=get_env_variable('KEEP_ME_SAFE_EMAIL'),
         subject='Traffic Conditions Today',
-        html_content='<img src={}>'.format(img_url)
+        html_content=html_content
     )
     sg = SendGridAPIClient(get_env_variable('SENDGRID_API_KEY'))
 
     response = sg.send(message)
-
+    print(type(response))
     print(response.status_code)
     print(response.body)
     print(response.headers)
+    return response
+
+
+def do_the_thing() -> Response:
+    img_urls = get_image_urls(get_pages())
+    html_content = build_html_content(img_urls)
+    return send_email(html_content)
 
 
 if "__main__" == __name__:
