@@ -91,14 +91,3 @@ class KeepMeSafeUnitTests(unittest.TestCase):
 
         with self.assertRaises(UnauthorizedError):
             send_email()
-
-
-# class KeepMeSafeIntegrationTests(unittest.TestCase):
-
-#     @vcr.use_cassette
-#     def test_do_the_thing_works(self):
-#         expected_status_code = 202
-
-#         actual_response = do_the_thing()
-
-#         self.assertEqual(expected_status_code, actual_response.status_code)
