@@ -22,10 +22,12 @@ jobs:
     - name: Auto Generate docs with pdoc3
       run: |
         pdoc --html --output-dir documentation keep_me_safe --force
+        echo "Ignore failure (maybe no docs need updated)"
     - name: Commit documentation
       run: |
         git config --global user.name 'Pachwenko'
         git config --global user.email '32424503+Pachwenko@users.noreply.github.com'
         git checkout -b generate-docs
         git commit -am "auto-generated documentation"
-        git push
+        git push --set-upstream origin generate-docs
+        echo "Ignore failure (maybe no docs need updated)"
