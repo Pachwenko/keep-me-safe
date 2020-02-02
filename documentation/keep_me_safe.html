@@ -75,6 +75,10 @@ def build_html_content(img_urls: dict) -&gt; str:
 
 
 def send_email(html_content=&#39;&#39;) -&gt; Response:
+    &#34;&#34;&#34;
+    Requires 2 environment variables to be set:
+        KEEP_ME_SAFE_EMAIL and SENDGRID_API_KEY
+    &#34;&#34;&#34;
     message = Mail(
         from_email=&#39;keep_me_safe@me_so_safe.com&#39;,
         to_emails=get_env_variable(&#39;KEEP_ME_SAFE_EMAIL&#39;),
@@ -199,12 +203,17 @@ if &#34;__main__&#34; == __name__:
 <span>def <span class="ident">send_email</span></span>(<span>html_content='')</span>
 </code></dt>
 <dd>
-<section class="desc"></section>
+<section class="desc"><p>Requires 2 environment variables to be set:
+KEEP_ME_SAFE_EMAIL and SENDGRID_API_KEY</p></section>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def send_email(html_content=&#39;&#39;) -&gt; Response:
+    &#34;&#34;&#34;
+    Requires 2 environment variables to be set:
+        KEEP_ME_SAFE_EMAIL and SENDGRID_API_KEY
+    &#34;&#34;&#34;
     message = Mail(
         from_email=&#39;keep_me_safe@me_so_safe.com&#39;,
         to_emails=get_env_variable(&#39;KEEP_ME_SAFE_EMAIL&#39;),
