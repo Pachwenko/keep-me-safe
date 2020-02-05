@@ -1,5 +1,7 @@
-from bs4 import BeautifulSoup
 import os
+
+from bs4 import BeautifulSoup
+from moto import mock_ses
 from python_http_client import UnauthorizedError
 import unittest
 
@@ -8,7 +10,8 @@ from keep_me_safe import (
     get_image_urls,
     get_env_variable,
     build_html_content,
-    send_email,
+    sendgrid_email,
+    ses_email,
     ParameterNotFound
 )
 import vcr
@@ -90,4 +93,8 @@ class KeepMeSafeUnitTests(unittest.TestCase):
         os.environ['SENDGRID_API_KEY'] = 'test_api_key'
 
         with self.assertRaises(UnauthorizedError):
-            send_email()
+            sendgrid_email()
+
+    @mock_ses
+    def test_ses_send_email(self):
+        ses_email('<p>Hello SES</p>')
