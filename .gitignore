@@ -1,5 +1,6 @@
 sendgrid.env
 .noseids
+lambda_function
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -36,7 +36,7 @@ def get_image_urls(pages: list, img_id='cam-0-img') -> dict:
     result = {}
     for page in pages:
         traffic_page = requests.get(page)
-        soup = BeautifulSoup(traffic_page.content)
+        soup = BeautifulSoup(traffic_page.content, features='html.parser')
         result[page] = (soup.find(id=img_id)['src'])
     return result
 
@@ -88,7 +88,7 @@ def ses_email(html_content=''):
     AWS_REGION = os.environ.get('AWS_DEFAULT_REGION', None) or "us-west-2"
 
     # The subject line for the email.
-    SUBJECT = "Amazon SES Test (SDK for Python)"
+    SUBJECT = "Keepin you safe every day"
 
     # The email body for recipients with non-HTML email clients.
     BODY_TEXT = ("")
@@ -142,9 +142,12 @@ def send_email(html_content='') -> Response:
     ses_email(html_content)
 
 
-def do_the_thing() -> Response:
+def do_the_thing(message=None, context=None) -> Response:
     """Entrypoint for the app"""
-    img_urls = get_image_urls(get_pages())
+    if message:
+        img_urls = get_image_urls(message['pages'])
+    else:
+        img_urls = get_image_urls(get_pages())
     html_content = build_html_content(img_urls)
     return send_email(html_content)
 
