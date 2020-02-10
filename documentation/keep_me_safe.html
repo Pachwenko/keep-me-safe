@@ -24,7 +24,7 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">import json
+<pre><code class="python">from datetime import datetime
 import os
 
 import boto3
@@ -41,12 +41,9 @@ class ParameterNotFound(Exception):
 
 
 def get_pages() -&gt; list:
-    result = []
-    with open(&#39;511_pages.json&#39;, &#39;r&#39;) as f:
-        result = json.loads(f.read())
-        if not isinstance(result, list):
-            return []
-    return result
+    return [
+            &#34;https://lb.511ia.org/ialb/cameras/camera.jsf?id=59169775&amp;view=state&amp;text=m&amp;textOnly=false&#34;,  # noqa: E501
+    ]
 
 
 def get_env_variable(parameter_name: str) -&gt; str:
@@ -58,37 +55,36 @@ def get_env_variable(parameter_name: str) -&gt; str:
     return result
 
 
-def get_image_urls(pages: list, img_id=&#39;cam-0-img&#39;) -&gt; dict:
+def get_image_data(pages: list, img_id=&#39;cam-0-img&#39;) -&gt; dict:
     result = {}
-    for page in pages:
-        traffic_page = requests.get(page)
-        soup = BeautifulSoup(traffic_page.content)
-        result[page] = (soup.find(id=img_id)[&#39;src&#39;])
+    for page_url in pages:
+        try:
+            traffic_page = requests.get(page_url)
+            soup = BeautifulSoup(traffic_page.content, features=&#39;html.parser&#39;)
+            result[page_url] = {
+                &#39;src&#39;: soup.find(id=img_id)[&#39;src&#39;],
+                &#39;title&#39;: soup.find(&#39;title&#39;).getText()
+            }
+        except Exception:
+            pass
     return result
 
 
 def build_html_content(img_urls: dict) -&gt; str:
     result = &#39;&#39;
     for key, value in img_urls.items():
-        result += &#39;&lt;a href={}&gt;&lt;img src={}&gt;&lt;/a&gt;&lt;br/&gt;&#39;.format(key, value)
+        result += &#39;&lt;p&gt;&lt;h2&gt;{}&lt;/h2&gt;&lt;a href={}&gt;&lt;img src={}&gt;&lt;/a&gt;&lt;br/&gt;&lt;/p&gt;&#39;.format(value[&#39;title&#39;], key, value[&#39;src&#39;])
     return result
 
 
 def sendgrid_email(html_content=&#39;&#39;):
-    &#34;&#34;&#34;
-    Requires 2 environment variables to be set:
-        KEEP_ME_SAFE_EMAIL and SENDGRID_API_KEY
-    &#34;&#34;&#34;
-    message = Mail(
-        from_email=&#39;keep_me_safe@me_so_safe.com&#39;,
-        to_emails=get_env_variable(&#39;KEEP_ME_SAFE_EMAIL&#39;),
-        subject=&#39;Traffic Conditions Today&#39;,
-        html_content=html_content
-    )
+    message = Mail(from_email=get_env_variable(&#39;KEEP_ME_SAFE_SENDER_EMAIL&#39;),
+                   to_emails=get_env_variable(&#39;KEEP_ME_SAFE_RECIPIENT_EMAIL&#39;),
+                   subject=&#39;Traffic Conditions Today&#39;,
+                   html_content=html_content)
     sg = SendGridAPIClient(get_env_variable(&#39;SENDGRID_API_KEY&#39;))
 
     response = sg.send(message)
-    print(type(response))
     print(response.status_code)
     print(response.body)
     print(response.headers)
@@ -96,38 +92,16 @@ def sendgrid_email(html_content=&#39;&#39;):
 
 
 def ses_email(html_content=&#39;&#39;):
-
-    # Replace sender@example.com with your &#34;From&#34; address.
-    # This address must be verified with Amazon SES.
-    SENDER = get_env_variable(&#39;KEEP_ME_SAFE_EMAIL&#39;)
-
-    # Replace recipient@example.com with a &#34;To&#34; address. If your account
-    # is still in the sandbox, this address must be verified.
-    RECIPIENT = get_env_variable(&#39;KEEP_ME_SAFE_EMAIL&#39;)
-
-    # Specify a configuration set. If you do not want to use a configuration
-    # set, comment the following variable, and the
-    # ConfigurationSetName=CONFIGURATION_SET argument below.
-    # CONFIGURATION_SET = &#34;ConfigSet&#34;
-
-    # If necessary, replace us-west-2 with the AWS Region you&#39;re using for Amazon SES.
+    SENDER = get_env_variable(&#39;KEEP_ME_SAFE_SENDER_EMAIL&#39;)
+    RECIPIENT = get_env_variable(&#39;KEEP_ME_SAFE_RECIPIENT_EMAIL&#39;)
     AWS_REGION = os.environ.get(&#39;AWS_DEFAULT_REGION&#39;, None) or &#34;us-west-2&#34;
-
-    # The subject line for the email.
-    SUBJECT = &#34;Amazon SES Test (SDK for Python)&#34;
-
-    # The email body for recipients with non-HTML email clients.
-    BODY_TEXT = (&#34;&#34;)
-
-    # The HTML body of the email.
+    SUBJECT = &#34;Keepin you safe every day. {}&#34;.format(datetime.now())
+    BODY_TEXT = (&#34;A daily email with current road conditiona over your commute.&#34;)
     BODY_HTML = html_content
-    # The character encoding for the email.
     CHARSET = &#34;UTF-8&#34;
 
-    # Create a new SES resource and specify a region.
     client = boto3.client(&#39;ses&#39;, region_name=AWS_REGION)
     try:
-        # Provide the contents of the email.
         response = client.send_email(
             Destination={
                 &#39;ToAddresses&#39;: [
@@ -151,28 +125,39 @@ def ses_email(html_content=&#39;&#39;):
                 },
             },
             Source=SENDER,
-            # If you are not using a configuration set, comment or delete the
-            # following line
-            # ConfigurationSetName=CONFIGURATION_SET,
         )
-    # Display an error if something goes wrong.
     except ClientError as e:
         print(e.response[&#39;Error&#39;][&#39;Message&#39;])
     else:
         print(&#34;Email sent! Message ID:&#34;),
         print(response[&#39;MessageId&#39;])
+        return response
 
 
 def send_email(html_content=&#39;&#39;) -&gt; Response:
     # sendgrid_email(html_content)
-    ses_email(html_content)
+    return ses_email(html_content)
 
 
-def do_the_thing() -&gt; Response:
-    &#34;&#34;&#34;Entrypoint for the app&#34;&#34;&#34;
-    img_urls = get_image_urls(get_pages())
-    html_content = build_html_content(img_urls)
-    return send_email(html_content)
+def do_the_thing(message=None, context=None) -&gt; Response:
+    &#34;&#34;&#34;
+    Entrypoint for the app, compatable with AWS lambda
+
+    Uses multiple environment variables:
+        KEEP_ME_SAFE_RECIPIENT_EMAIL
+        KEEP_ME_SAFE_SENDER_EMAIL
+        AWS_DEFAULT_REGION (defaults to us-west-2)
+        SENDGRID_API_KEY (unused)
+
+    Also requires aws credentials to be set up if not using SendGrid
+    &#34;&#34;&#34;
+    try:
+        img_urls = get_image_data(get_pages())
+        html_content = build_html_content(img_urls)
+        return send_email(html_content)
+    except Exception as e:
+        print(&#39;Got an exception trying to keep you safe.\nException: {}&#39;.format(repr(e)))
+        raise
 
 
 if &#34;__main__&#34; == __name__:
@@ -198,24 +183,44 @@ if &#34;__main__&#34; == __name__:
 <pre><code class="python">def build_html_content(img_urls: dict) -&gt; str:
     result = &#39;&#39;
     for key, value in img_urls.items():
-        result += &#39;&lt;a href={}&gt;&lt;img src={}&gt;&lt;/a&gt;&lt;br/&gt;&#39;.format(key, value)
+        result += &#39;&lt;p&gt;&lt;h2&gt;{}&lt;/h2&gt;&lt;a href={}&gt;&lt;img src={}&gt;&lt;/a&gt;&lt;br/&gt;&lt;/p&gt;&#39;.format(value[&#39;title&#39;], key, value[&#39;src&#39;])
     return result</code></pre>
 </details>
 </dd>
 <dt id="keep_me_safe.do_the_thing"><code class="name flex">
-<span>def <span class="ident">do_the_thing</span></span>(<span>)</span>
+<span>def <span class="ident">do_the_thing</span></span>(<span>message=None, context=None)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Entrypoint for the app</p></section>
+<section class="desc"><p>Entrypoint for the app, compatable with AWS lambda</p>
+<p>Uses multiple environment variables:
+KEEP_ME_SAFE_RECIPIENT_EMAIL
+KEEP_ME_SAFE_SENDER_EMAIL
+AWS_DEFAULT_REGION (defaults to us-west-2)
+SENDGRID_API_KEY (unused)</p>
+<p>Also requires aws credentials to be set up if not using SendGrid</p></section>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def do_the_thing() -&gt; Response:
-    &#34;&#34;&#34;Entrypoint for the app&#34;&#34;&#34;
-    img_urls = get_image_urls(get_pages())
-    html_content = build_html_content(img_urls)
-    return send_email(html_content)</code></pre>
+<pre><code class="python">def do_the_thing(message=None, context=None) -&gt; Response:
+    &#34;&#34;&#34;
+    Entrypoint for the app, compatable with AWS lambda
+
+    Uses multiple environment variables:
+        KEEP_ME_SAFE_RECIPIENT_EMAIL
+        KEEP_ME_SAFE_SENDER_EMAIL
+        AWS_DEFAULT_REGION (defaults to us-west-2)
+        SENDGRID_API_KEY (unused)
+
+    Also requires aws credentials to be set up if not using SendGrid
+    &#34;&#34;&#34;
+    try:
+        img_urls = get_image_data(get_pages())
+        html_content = build_html_content(img_urls)
+        return send_email(html_content)
+    except Exception as e:
+        print(&#39;Got an exception trying to keep you safe.\nException: {}&#39;.format(repr(e)))
+        raise</code></pre>
 </details>
 </dd>
 <dt id="keep_me_safe.get_env_variable"><code class="name flex">
@@ -236,8 +241,8 @@ if &#34;__main__&#34; == __name__:
     return result</code></pre>
 </details>
 </dd>
-<dt id="keep_me_safe.get_image_urls"><code class="name flex">
-<span>def <span class="ident">get_image_urls</span></span>(<span>pages, img_id='cam-0-img')</span>
+<dt id="keep_me_safe.get_image_data"><code class="name flex">
+<span>def <span class="ident">get_image_data</span></span>(<span>pages, img_id='cam-0-img')</span>
 </code></dt>
 <dd>
 <section class="desc"></section>
@@ -245,12 +250,18 @@ if &#34;__main__&#34; == __name__:
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def get_image_urls(pages: list, img_id=&#39;cam-0-img&#39;) -&gt; dict:
+<pre><code class="python">def get_image_data(pages: list, img_id=&#39;cam-0-img&#39;) -&gt; dict:
     result = {}
-    for page in pages:
-        traffic_page = requests.get(page)
-        soup = BeautifulSoup(traffic_page.content)
-        result[page] = (soup.find(id=img_id)[&#39;src&#39;])
+    for page_url in pages:
+        try:
+            traffic_page = requests.get(page_url)
+            soup = BeautifulSoup(traffic_page.content, features=&#39;html.parser&#39;)
+            result[page_url] = {
+                &#39;src&#39;: soup.find(id=img_id)[&#39;src&#39;],
+                &#39;title&#39;: soup.find(&#39;title&#39;).getText()
+            }
+        except Exception:
+            pass
     return result</code></pre>
 </details>
 </dd>
@@ -264,12 +275,9 @@ if &#34;__main__&#34; == __name__:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def get_pages() -&gt; list:
-    result = []
-    with open(&#39;511_pages.json&#39;, &#39;r&#39;) as f:
-        result = json.loads(f.read())
-        if not isinstance(result, list):
-            return []
-    return result</code></pre>
+    return [
+            &#34;https://lb.511ia.org/ialb/cameras/camera.jsf?id=59169775&amp;view=state&amp;text=m&amp;textOnly=false&#34;,  # noqa: E501
+    ]</code></pre>
 </details>
 </dd>
 <dt id="keep_me_safe.send_email"><code class="name flex">
@@ -283,34 +291,26 @@ if &#34;__main__&#34; == __name__:
 </summary>
 <pre><code class="python">def send_email(html_content=&#39;&#39;) -&gt; Response:
     # sendgrid_email(html_content)
-    ses_email(html_content)</code></pre>
+    return ses_email(html_content)</code></pre>
 </details>
 </dd>
 <dt id="keep_me_safe.sendgrid_email"><code class="name flex">
 <span>def <span class="ident">sendgrid_email</span></span>(<span>html_content='')</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Requires 2 environment variables to be set:
-KEEP_ME_SAFE_EMAIL and SENDGRID_API_KEY</p></section>
+<section class="desc"></section>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def sendgrid_email(html_content=&#39;&#39;):
-    &#34;&#34;&#34;
-    Requires 2 environment variables to be set:
-        KEEP_ME_SAFE_EMAIL and SENDGRID_API_KEY
-    &#34;&#34;&#34;
-    message = Mail(
-        from_email=&#39;keep_me_safe@me_so_safe.com&#39;,
-        to_emails=get_env_variable(&#39;KEEP_ME_SAFE_EMAIL&#39;),
-        subject=&#39;Traffic Conditions Today&#39;,
-        html_content=html_content
-    )
+    message = Mail(from_email=get_env_variable(&#39;KEEP_ME_SAFE_SENDER_EMAIL&#39;),
+                   to_emails=get_env_variable(&#39;KEEP_ME_SAFE_RECIPIENT_EMAIL&#39;),
+                   subject=&#39;Traffic Conditions Today&#39;,
+                   html_content=html_content)
     sg = SendGridAPIClient(get_env_variable(&#39;SENDGRID_API_KEY&#39;))
 
     response = sg.send(message)
-    print(type(response))
     print(response.status_code)
     print(response.body)
     print(response.headers)
@@ -327,38 +327,16 @@ KEEP_ME_SAFE_EMAIL and SENDGRID_API_KEY</p></section>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def ses_email(html_content=&#39;&#39;):
-
-    # Replace sender@example.com with your &#34;From&#34; address.
-    # This address must be verified with Amazon SES.
-    SENDER = get_env_variable(&#39;KEEP_ME_SAFE_EMAIL&#39;)
-
-    # Replace recipient@example.com with a &#34;To&#34; address. If your account
-    # is still in the sandbox, this address must be verified.
-    RECIPIENT = get_env_variable(&#39;KEEP_ME_SAFE_EMAIL&#39;)
-
-    # Specify a configuration set. If you do not want to use a configuration
-    # set, comment the following variable, and the
-    # ConfigurationSetName=CONFIGURATION_SET argument below.
-    # CONFIGURATION_SET = &#34;ConfigSet&#34;
-
-    # If necessary, replace us-west-2 with the AWS Region you&#39;re using for Amazon SES.
+    SENDER = get_env_variable(&#39;KEEP_ME_SAFE_SENDER_EMAIL&#39;)
+    RECIPIENT = get_env_variable(&#39;KEEP_ME_SAFE_RECIPIENT_EMAIL&#39;)
     AWS_REGION = os.environ.get(&#39;AWS_DEFAULT_REGION&#39;, None) or &#34;us-west-2&#34;
-
-    # The subject line for the email.
-    SUBJECT = &#34;Amazon SES Test (SDK for Python)&#34;
-
-    # The email body for recipients with non-HTML email clients.
-    BODY_TEXT = (&#34;&#34;)
-
-    # The HTML body of the email.
+    SUBJECT = &#34;Keepin you safe every day. {}&#34;.format(datetime.now())
+    BODY_TEXT = (&#34;A daily email with current road conditiona over your commute.&#34;)
     BODY_HTML = html_content
-    # The character encoding for the email.
     CHARSET = &#34;UTF-8&#34;
 
-    # Create a new SES resource and specify a region.
     client = boto3.client(&#39;ses&#39;, region_name=AWS_REGION)
     try:
-        # Provide the contents of the email.
         response = client.send_email(
             Destination={
                 &#39;ToAddresses&#39;: [
@@ -382,16 +360,13 @@ KEEP_ME_SAFE_EMAIL and SENDGRID_API_KEY</p></section>
                 },
             },
             Source=SENDER,
-            # If you are not using a configuration set, comment or delete the
-            # following line
-            # ConfigurationSetName=CONFIGURATION_SET,
         )
-    # Display an error if something goes wrong.
     except ClientError as e:
         print(e.response[&#39;Error&#39;][&#39;Message&#39;])
     else:
         print(&#34;Email sent! Message ID:&#34;),
-        print(response[&#39;MessageId&#39;])</code></pre>
+        print(response[&#39;MessageId&#39;])
+        return response</code></pre>
 </details>
 </dd>
 </dl>
@@ -432,7 +407,7 @@ KEEP_ME_SAFE_EMAIL and SENDGRID_API_KEY</p></section>
 <li><code><a title="keep_me_safe.build_html_content" href="#keep_me_safe.build_html_content">build_html_content</a></code></li>
 <li><code><a title="keep_me_safe.do_the_thing" href="#keep_me_safe.do_the_thing">do_the_thing</a></code></li>
 <li><code><a title="keep_me_safe.get_env_variable" href="#keep_me_safe.get_env_variable">get_env_variable</a></code></li>
-<li><code><a title="keep_me_safe.get_image_urls" href="#keep_me_safe.get_image_urls">get_image_urls</a></code></li>
+<li><code><a title="keep_me_safe.get_image_data" href="#keep_me_safe.get_image_data">get_image_data</a></code></li>
 <li><code><a title="keep_me_safe.get_pages" href="#keep_me_safe.get_pages">get_pages</a></code></li>
 <li><code><a title="keep_me_safe.send_email" href="#keep_me_safe.send_email">send_email</a></code></li>
 <li><code><a title="keep_me_safe.sendgrid_email" href="#keep_me_safe.sendgrid_email">sendgrid_email</a></code></li>
