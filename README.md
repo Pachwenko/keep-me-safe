@@ -5,10 +5,14 @@ Scrapes Iowa DOT 511 traffic pages for recent pictures and emails a list to myse
 
 ## Usage
 
-Set up AWS Credentials to use SES or upload to AWS Lambda. Alternatively, modify code to use sendgrid and set `SENDGRID_API_KEY`
+Can be run locally, but it is perferrable to run in [AWS Lambda](https://aws.amazon.com/lambda/) using [AWS SES](https://aws.amazon.com/ses/) to send emails.
+
 Will always require 2 environment variables:
 `KEEP_ME_SAFE_SENDER_EMAIL` - This will need to be [verified with AWS SES.](https://docs.aws.amazon.com/ses/latest/DeveloperGuide/verify-email-addresses.html)
+
 `KEEP_ME_SAFE_RECIPIENT_EMAIL`
+
+Can alternatively use SendGrid, but I found this unreliable.
 
 ## Running manually
 ```
