@@ -1,12 +1,13 @@
 import os
 
+from moto.ses import ses_backend
 from bs4 import BeautifulSoup
 from moto import mock_ses
 from python_http_client import UnauthorizedError
 import unittest
 
 from keep_me_safe import (
-    # do_the_thing,
+    do_the_thing,
     get_image_urls,
     get_env_variable,
     build_html_content,
@@ -46,7 +47,9 @@ class KeepMeSafeUnitTests(unittest.TestCase):
         expected_parameter = 'test_variable'
         os.environ[parameter_name] = expected_parameter
 
-        self.assertEqual(expected_parameter, get_env_variable(parameter_name))
+        actual_parameter = get_env_variable(parameter_name)
+
+        self.assertEqual(expected_parameter, actual_parameter)
 
     def test_returns_none_when_parameter_name_is_wrong_type(self):
         parameter_name = []
@@ -72,9 +75,9 @@ class KeepMeSafeUnitTests(unittest.TestCase):
         pages = ['https://google.com', 'https://google.com']
         img_id = 'hplogo'
 
-        actual_url = get_image_urls(pages, img_id)
+        actual_urls = get_image_urls(pages, img_id)
 
-        self.assertEqual(expected_src_urls, actual_url)
+        self.assertEqual(expected_src_urls, actual_urls)
 
     def test_build_html_content_returns_right_data(self):
         expected_src_url = self.expected_src_url
@@ -82,14 +85,17 @@ class KeepMeSafeUnitTests(unittest.TestCase):
         img_urls = {expected_page: expected_src_url}
 
         actual_html = build_html_content(img_urls)
-
         soup = BeautifulSoup(actual_html)
-        self.assertEqual(expected_src_url, soup.find('img')['src'])
-        self.assertEqual(expected_page, soup.find('img').parent['href'])
+        actual_src_url = soup.find('img')['src']
+        actual_page = soup.find('img').parent['href']
+
+        self.assertEqual(expected_src_url, actual_src_url)
+        self.assertEqual(expected_page, actual_page)
 
     @my_vcr.use_cassette
-    def test_sends_email_throws_unauthorized_error_when_bad_api_key(self):
-        os.environ['KEEP_ME_SAFE_EMAIL'] = 'test@example.com'
+    def test_sendgrid_email_throws_unauthorized_error_when_bad_api_key(self):
+        os.environ['KEEP_ME_SAFE_RECIPIENT_EMAIL'] = 'test1@example.com'
+        os.environ['KEEP_ME_SAFE_SENDER_EMAIL'] = 'test2@example.com'
         os.environ['SENDGRID_API_KEY'] = 'test_api_key'
 
         with self.assertRaises(UnauthorizedError):
@@ -97,4 +103,26 @@ class KeepMeSafeUnitTests(unittest.TestCase):
 
     @mock_ses
     def test_ses_send_email(self):
+        os.environ['KEEP_ME_SAFE_RECIPIENT_EMAIL'] = 'test1@example.com'
+        os.environ['KEEP_ME_SAFE_SENDER_EMAIL'] = 'test2@example.com'
         ses_email('<p>Hello SES</p>')
+
+    @mock_ses
+    def test_do_the_thing_with_verified_email(self):
+        ses_backend.verify_domain('example.com')
+        ses_backend.verify_email_address('test2@example.com')
+        os.environ['KEEP_ME_SAFE_RECIPIENT_EMAIL'] = 'test1@example.com'
+        os.environ['KEEP_ME_SAFE_SENDER_EMAIL'] = 'test2@example.com'
+        expected_status_code = 200
+
+        response = do_the_thing()
+        actual_status_code = response['ResponseMetadata']['HTTPStatusCode']
+
+        self.assertEqual(expected_status_code, actual_status_code)
+
+    @mock_ses
+    def test_do_the_thing_throws_exception_on_missing_environment_variable(self):
+        os.environ['KEEP_ME_SAFE_RECIPIENT_EMAIL'] = 'test1@example.com'
+
+        with self.assertRaises(ParameterNotFound):
+            do_the_thing('<p>Hello SES</p>')

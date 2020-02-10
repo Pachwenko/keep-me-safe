@@ -1,0 +1,51 @@
+interactions:
+- request:
+    body: '{"from": {"email": "test2@example.com"}, "subject": "Traffic Conditions
+      Today", "personalizations": [{"to": [{"email": "test1@example.com"}]}], "content":
+      [{"type": "text/html", "value": ""}]}'
+    headers:
+      Accept:
+      - application/json
+      Authorization:
+      - Bearer test_api_key
+      Connection:
+      - close
+      Content-Length:
+      - '192'
+      Content-Type:
+      - application/json
+      Host:
+      - api.sendgrid.com
+      User-Agent:
+      - sendgrid/6.1.1;python
+    method: POST
+    uri: https://api.sendgrid.com/v3/mail/send
+  response:
+    body:
+      string: '{"errors":[{"message":"The provided authorization grant is invalid,
+        expired, or revoked","field":null,"help":null}]}'
+    headers:
+      Access-Control-Allow-Headers:
+      - Authorization, Content-Type, On-behalf-of, x-sg-elas-acl
+      Access-Control-Allow-Methods:
+      - POST
+      Access-Control-Allow-Origin:
+      - https://sendgrid.api-docs.io
+      Access-Control-Max-Age:
+      - '600'
+      Connection:
+      - close
+      Content-Length:
+      - '116'
+      Content-Type:
+      - application/json
+      Date:
+      - Mon, 10 Feb 2020 00:06:01 GMT
+      Server:
+      - nginx
+      X-No-CORS-Reason:
+      - https://sendgrid.com/docs/Classroom/Basics/API/cors.html
+    status:
+      code: 401
+      message: Unauthorized
+version: 1

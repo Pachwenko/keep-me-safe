@@ -1,6 +1,7 @@
 sendgrid.env
 .noseids
 lambda_function
+511_urls.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
