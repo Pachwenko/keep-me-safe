@@ -1,0 +1,120 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.22.0
+    method: GET
+    uri: https://lb.511ia.org/ialb/cameras/camera.jsf?id=59169775&view=state&text=m&textOnly=false
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAAMUa6XLbNvr39ikQZlLZs+Kl+6Jcx0436thxtrabdDsdD0RCEm2SYAnIsnK8S5+l
+        T7YfAJKiTttN6ngyEQECH777AnsHd2GAbknCfBo5mm1YGiKRSz0/Gjva5cWPeks76H/Xe3Z8dnTx
+        69tXaMJh/dvLlyeDI6TppvmuemSaxxfH6P3ri9MTBADQRYIj5nMAiAPTfPVGQ9qE87hjmrPZzJhV
+        DZqMzYufzTsByxab00edF3YaHvc0OFkeCEhGzNkAxm6322q3JhZ1AizwJpGG8icBg2Cv/x1CqMd9
+        HpD+gM4wOiYxTnhIIo7oSCEd04RjcbwY3pKAJGgQjWgSqkkdndAZeokjb+Z7fILekSHMHeGQJBge
+        jk/hv4FerZstC/2AXs/myK7ZaK9i7fdMdbDAAfVCwjGKYJuj4TgOiO7zaUSYDgMNuTTigJN8pfue
+        U6+0rFqz2W5ryEz3B350gxISOBrj84CwCSFcQ5OEjBzN9HEwNF3GTDdxdZeGIY0MGMrdj9keEs+f
+        hpzccbH9oGJUhW6kKDwCzhAzsgLhUVRMkwTYsQGHBwKIcUQCprMQB0HijydfAEpwlNxuxOaBEJKZ
+        z1ypLysgeqbS0d6QenP4EUqHQPra9RWomt3QUn3Jh6BDEwrvY8rgHOxyab/pSfIElv4a12zUvWaE
+        CRMHkINRvVGhl4MKqQ2To9lgwI7OP9g16y1tWO/HSeWPH5uvjsfjtuHHum3pNb1Z1Ss1W/oFPo9T
+        pfVdaRPmnQ7WqAt09WkSSNdBpN36UTzlSG2Y+J4nbHKFhlscTItjM99WoLxz65OZtgtQuiKFxsCC
+        iYC1AZTv7QYk3qdg6m270W4267mApVjT3cIqhDy1zBrwc3bjx+ngY24iCKQj3VkH4SGjwZST7uJl
+        QEYcXkw5LUxyGncQ8N2y4rvCtHQ4HWQvTU6I0OfVWQrefBTQWQcpIrNXnzNcO0JbbolEuQzDEXWn
+        7F4CBF99dx2lFfwznIrT8uSeKTmomOn5t8gNMAOfHuMxeSdA5czsYSk0gVBmQc9D7EdHyjNqiEYu
+        6N+No3mAuXDgxpjwVwERjy/nA2+vVFhe2jckgXv7Xa1/DjDRG3zrj6X29kz8AOEaQxxFJAEvTcKP
+        KMaeCI6dKjAdnHVAk85sAq+6OYOL6xH+uLxIQNc94tJEYtCJaJRtzTiEVKTCQ0DJJUGQnuho4CrE
+        mMXYzcZDmngkkY9SHhDCLevFgpU8kbyEQ2ZkeBVRECHRCj6ce0ge6mhD7N6MEzqNPF0h/HxUa9Yq
+        lW42kn/djPxafIdawIICMARRc47iCTh8ZIuYSqeJEGZ6wDKcEUhHnyllGdLA64Jl4gTk6GhXQ4jd
+        N5noRcxnEPSBAqNu2z6Wcf+ATejMSSj29ISIsM3KEDgZT6bSE5blG5jxpPayMqczwFqPEzrxhyAI
+        rzwjmE9IUqbif116DfacA8pafxp7MPIQHIeAbWABRGgKgsAPRsvRlKGbCDKB2QRzNKdTxCfg/Y0F
+        V03uLfMYB/4Y3LOMP9pWjqO/wfIecxM/5sUphEbTSLIBAlII7uAsIpCqvJHC39svmrf822ZFK1qz
+        byhoYEhLAD4XsTHX0VlowJrMIbgzIDSmPphq0i1Y9ibEtf57KYaNfIbnpKD1aZIhmQ/cBJMB9le0
+        TBDC9UpXL0dDyjkNF2zt+eEYscTN4qkfgo9iMkKTRE5dVSy7dqXs3IijsQAMmqvyyrMLyBPHFBRa
+        5HzZ7K5sUy0v2PKUkRDH4PdAAuoUGYf+BcjJ/3rwVhp24b0KZYsJtVwKICEggwkW3i0hLhdJJpwF
+        zrdRrZVb5WarVq42iwaXJtk+YO5RUAx6m1F4COSluDwAfqvWAPitZrtcbWXwUeEAL2aGND0D7HrK
+        zMH52+wg8ZSS3DOB3IJK7ZT7YtVm0ac2OBxLIwMWW1YVQn1ulUX/ri2bVU/AyuJWwclrfdDxYqo3
+        IUH8ldKuA5HcOJJH3+Mw7or44YT541kUzJ0RDhh49ddwqjAQMELA86Gof3rc8hVKQ5oQcJNPT+wp
+        HCwc9NMRnKotTxZhaC1m9S8gAN1ANf20aLHUnMaUjgOotmgoLIaZP9Rso123q5Wy3q4ZlUal0a6X
+        mx9MCG/YeVYP7Wc2sdeJ+I8EI5zUaOS7T61SMxkMjhP/Fszw6RXrnTwepec/NfEqBsDB5zIh+Sam
+        9TLDASkkSk9rZ2kNC7kC1CmX7OnpP1JHo8vNVrwx+sCDyNehgFUJULGWuMa3WM3KeHKLE3Q1xn8g
+        R/18+oR++12kVGJkxFM22futdMUIP3RdSA55qYxKl4d6tW016q2m3ir9vr+2mieQS76FLEVQmS7Y
+        y7LAPOUTJ48xnJtnfC5Ebk7SpG+vpLAs7XdhmSEogLWlFRpK8iVm88iFt5BwpyUtTELKBFN7JeWS
+        SsgpnBRQ1TAwIAXnFGIvOkClzHcxFpRQR42VKyvto3+jUurQdBzhYA5JIJOubSxaGqVuThIrUrTI
+        YdnL+QUev4GsaEHYb9bvXcQMSMVgwRvqQd4RMZLwl2QE8WRvjMuISeZ93hdp7lI62zOhal0rX5UO
+        o0UVm+cRWeWckACLertbqMpUbbdaAN9X7S0lN8mKYYlsRwEUAjv3P5ALbyV/2Yh6VlX3L2AbEvtW
+        9yCZwy8Z5z/RYDqQJsmkSW4w1oWFyinRGc1bNCuEn4teH4K6SpXZxDvxRVg7lOb8ZJSEX4GSU9mE
+        /eakBF+BlBORZGyhZE1Lc1Pb6HVzjd+o3n0ojpI/poQstf7kbx3KALBoGgQ4FK7V0arZhAdWOne0
+        uqhB4R0joo3maP4I7UF1L6oUGu9/zB/BO3xGBOhG6Ry4a84Tfzjlyt3kZ5TKJQs86ufuAvKULwGG
+        ujCHDM+PAY1KVaSA90WRJMn+G9xcKqKySIbWXN4DPNtKY+900Yc7gZL7rejFa1ltvuaPIBh5bjIN
+        h2xX4SUb+heitNb6f/25MclQDcSlnqGqjpemNrUWgXYfVPTO0XRb66MdZgYhZvoNyh44ddli/vrz
+        019/flekfRO2CSgdYSSA6vwbJFQKiTVLX0H9Huy/Ft4SmGO3X1QPbXubY9tCyUBvWctkrBrXDgtI
+        Fb/3TNd/IAFkLr5MA4SqSpwOI++cyIyNZdcUbuIaMzIMhoYSoPHz6kJd728Dqrh37LMYXNsGiIW7
+        KPVztLRhB+SZSlcURJEaGuK21RgAmWOSyJ2Z01jJedImda1lxXdLHa8vS3125jlFhyEE2NmQ4Oy4
+        u/27wWm54fSF/rdAVSpa3cpTTU9JrDOEJPtmtWmF0n5mvk2Hkabam2m+XbHqRqViG42GYVsmvvOZ
+        eXx68UvFMq7jcd7G3MGitGe3c8X6TQUogZbeF0Egblgr98s5J1cU515dKRy1Bg1t0J9NQpMN4i3L
+        0LJ6KeM5wYxfqnuDXfvWdafwboMeryG2SZvuBVHUr+JkrmibsVsaLw8K9Ic4/lkglQX3xfYVVyhN
+        EBWsUbm+mG80zfstcgfiO4vwYmv/Wt3qiyVQykZpjXqdXc33N1xo3F/hL/5GPhdl1QXNSmxUSukt
+        oeI1yqZjllksuZsHktwRqPS2WdlZdq6urq6vzq+n5aW0uHsWF9Hi94MuE6KOtc2xrF+UkDDmc2Ps
+        j3LfcYpjce1xvwt5yMLs+kxaubpAXfiRulVwMJb0KEo7VplQv48JdsYFu8iGdrPVXW9W/SOl1wdK
+        Q8euPipFWSvD+ltkFAdTJkT0Vb4MkaL7H6CLBtFCFHZti6xSpcg3ZDfXNSUtvEVi7QdLrNL4lhJ7
+        XFL5YImFfvSPiOxsyh8pM7ljm9AE8hJ4eotwLr8bQcKwB4KQZetcMts8JxE9QXGBkfb/cOyzxaUG
+        jEz1MQoMD1wi2vVODbKXWtu2Gi8qR3q7ajSb1Vq1LXmrhFKRz8z/QBw4+A7OUxMkYjQpSCKkQx8I
+        FX1NOXYnoksWOINDNQx88XHeOCS6CxE/IAmkXOCjqeuLVrkCgRNxBeT4LmioJAdKjReVH+EfpN35
+        5REMhXjFjxSweBDfMMCvKtRAwlcTHFBxwfyJTbBHZx2J6Kcd1H754alJgKI9+FAGqQnm04Q4k7Or
+        OdUvX5+1yCkb//f8VeX9T2+qk8Ofpr86C1/8sPIpi3onUFRE3lr3dFcSWL23V5rd/Ye+54nsY4vR
+        SaaYC5Z8PdtTxVZuWNnQ3FkobEFebX5gUbGB8YU+T2rE2z/eg1TnzhhhF4rRX8DFnavP7aSb3vwq
+        /aCuWrPb9bZVr9gtu1Vt1NvNdkevN1tty25UK/W61aq2q5UaSFJ8OgbWHgcE6nSNjkbpF5LiI0Mo
+        LHtm+o2kKT777f8fijdvacIsAAA=
+    headers:
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Headers:
+      - Content-Type
+      Access-Control-Allow-Methods:
+      - GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS
+      Access-Control-Allow-Origin:
+      - '*'
+      Cache-Control:
+      - no-cache
+      Connection:
+      - keep-alive
+      Content-Encoding:
+      - gzip
+      Content-Length:
+      - '3269'
+      Content-Type:
+      - text/html;charset=UTF-8
+      Date:
+      - Mon, 10 Feb 2020 03:31:33 GMT
+      Expires:
+      - '0'
+      Pragma:
+      - no-cache
+      Server:
+      - nginx/1.16.1
+      Set-Cookie:
+      - AWSALB=AWE+s70f2rBIN8fgvWPuxiZZriM5TE4S4c84oLIP3ZNuHMpyvcGbpB8+hbPYLR/wICWkG3A+Za6VxI1rk45/GRBMxr3xbxpes0m2E02uQrS1zFgNs32HNVG6OjJx;
+        Expires=Mon, 17 Feb 2020 03:31:33 GMT; Path=/
+      - AWSALBCORS=AWE+s70f2rBIN8fgvWPuxiZZriM5TE4S4c84oLIP3ZNuHMpyvcGbpB8+hbPYLR/wICWkG3A+Za6VxI1rk45/GRBMxr3xbxpes0m2E02uQrS1zFgNs32HNVG6OjJx;
+        Expires=Mon, 17 Feb 2020 03:31:33 GMT; Path=/; SameSite=None; Secure
+      - JSESSIONID=If562oUI2e4brCwIIsCSz140Po60Xgr2qF7EDgg9.ip-10-4-73-241; path=/ialb
+      Vary:
+      - Accept-Encoding
+      X-Powered-By:
+      - Undertow/1
+      X-Server:
+      - ip-10-4-73-241
+      X-Upstream:
+      - 127.0.0.1:9080
+    status:
+      code: 200
+      message: OK
+version: 1

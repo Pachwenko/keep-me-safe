@@ -1,5 +1,4 @@
 from datetime import datetime
-import json
 import os
 
 import boto3
@@ -15,18 +14,10 @@ class ParameterNotFound(Exception):
     pass
 
 
-def get_pages(filename='') -> list:
-    if filename:
-        result = []
-        with open('511_pages.json', 'r') as f:
-            result = json.loads(f.read())
-            if not isinstance(result, list):
-                return []
-        return result
-    else:
-        return [[
-            "https://lb.511ia.org/ialb/cameras/camera.jsf;jsessionid=CDRUfIHRjFD3g-KsTsIcu5xggMRZMM7pZrCqWiUt.ip-10-4-73-18?id=59169258&view=state&text=m&textOnly=false"  # noqa: E501
-        ]]
+def get_pages() -> list:
+    return [
+            "https://lb.511ia.org/ialb/cameras/camera.jsf?id=59169775&view=state&text=m&textOnly=false",  # noqa: E501
+    ]
 
 
 def get_env_variable(parameter_name: str) -> str:
@@ -38,13 +29,16 @@ def get_env_variable(parameter_name: str) -> str:
     return result
 
 
-def get_image_urls(pages: list, img_id='cam-0-img') -> dict:
+def get_image_data(pages: list, img_id='cam-0-img') -> dict:
     result = {}
-    for page in pages:
+    for page_url in pages:
         try:
-            traffic_page = requests.get(page)
+            traffic_page = requests.get(page_url)
             soup = BeautifulSoup(traffic_page.content, features='html.parser')
-            result[page] = (soup.find(id=img_id)['src'])
+            result[page_url] = {
+                'src': soup.find(id=img_id)['src'],
+                'title': soup.find('title').getText()
+            }
         except Exception:
             pass
     return result
@@ -53,12 +47,11 @@ def get_image_urls(pages: list, img_id='cam-0-img') -> dict:
 def build_html_content(img_urls: dict) -> str:
     result = ''
     for key, value in img_urls.items():
-        result += '<a href={}><img src={}></a><br/>'.format(key, value)
+        result += '<p><h2>{}</h2><a href={}><img src={}></a><br/></p>'.format(value['title'], key, value['src'])
     return result
 
 
 def sendgrid_email(html_content=''):
-    """Requires SENDGRID_API_KEY environment variable to be set"""
     message = Mail(from_email=get_env_variable('KEEP_ME_SAFE_SENDER_EMAIL'),
                    to_emails=get_env_variable('KEEP_ME_SAFE_RECIPIENT_EMAIL'),
                    subject='Traffic Conditions Today',
@@ -133,7 +126,7 @@ def do_the_thing(message=None, context=None) -> Response:
     Also requires aws credentials to be set up if not using SendGrid
     """
     try:
-        img_urls = get_image_urls(get_pages())
+        img_urls = get_image_data(get_pages())
         html_content = build_html_content(img_urls)
         return send_email(html_content)
     except Exception as e:
