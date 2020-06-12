@@ -18,8 +18,8 @@ jobs:
     - name: Create Pull Request
       id: cpr
       uses: peter-evans/create-pull-request@v2
-      # with:
-      #   branch: master
+      with:
+        branch: prod-pr
     - name: Create or Update Project Card
       uses: peter-evans/create-or-update-project-card@v1
       with:
