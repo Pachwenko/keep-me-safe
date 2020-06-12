@@ -1,0 +1,28 @@
+name: Generate production PR and update deploy project
+
+on:
+  push:
+    branches:
+      - master
+
+# See https://github.com/peter-evans/create-pull-request
+# and https://github.com/peter-evans/create-pull-request/blob/master/docs/examples.md#keep-a-branch-up-to-date-with-another
+
+jobs:
+  generateProdPR:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+          ref: production
+    - name: Create Pull Request
+      id: cpr
+      uses: peter-evans/create-pull-request@v2
+      with:
+        branch: master
+    - name: Create or Update Project Card
+      uses: peter-evans/create-or-update-project-card@v1
+      with:
+        project-name: Production Deploys
+        column-name: Created / Needs Review
+        issue-number: ${{ steps.cpr.outputs.pull-request-number }}
