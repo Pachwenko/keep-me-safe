@@ -19,7 +19,7 @@ jobs:
       id: cpr
       uses: peter-evans/create-pull-request@v2
       with:
-        branch: prod-pr
+        branch: master
     - name: Create or Update Project Card
       uses: peter-evans/create-or-update-project-card@v1
       with:
