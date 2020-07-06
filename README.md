@@ -1,7 +1,7 @@
 # keep-me-safe
 ![Python Lint, MyPy, and Test](https://github.com/Pachwenko/keep-me-safe/workflows/Python%20Lint,%20MyPy,%20and%20Test/badge.svg)
 
-Scrapes Iowa DOT 511 traffic pages for images of current road conditions and email them to myself.
+Update: does not work (urls change weekly). Scrapes Iowa DOT 511 traffic pages for images of current road conditions and email them to myself.
 
 ## Usage
 
